@@ -20,7 +20,12 @@ namespace TrashCollector.Controllers
         // GET: CustomerController
         public ActionResult Index()
         {
-            return View();
+            var customerList = db.Customer;
+            if (customerList == null)
+            {
+                return RedirectToAction("Create");
+            }
+            return View(customerList);
         }
 
         // GET: CustomerController/Details/5
@@ -53,6 +58,7 @@ namespace TrashCollector.Controllers
         // GET: CustomerController/Edit/5
         public ActionResult Edit(int id)
         {
+            
             return View();
         }
 
