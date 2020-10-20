@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrashCollector.Data;
+using TrashCollector.Models;
 
 namespace TrashCollector.Controllers
 {
@@ -18,14 +20,18 @@ namespace TrashCollector.Controllers
         // GET: EmployeeController
         public ActionResult Index()
         {
-            
-            return View();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var employee = db.Employee.Where(c => c.IdentityUserId ==
+            userId).SingleOrDefault();
+            return View(employee);
         }
+            
 
         // GET: EmployeeController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var employeeDetail = db.Employee.Find(id);
+            return View(employeeDetail);
         }
 
         // GET: EmployeeController/Create
@@ -37,10 +43,14 @@ namespace TrashCollector.Controllers
         // POST: EmployeeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Employee employee)//(IFormCollection collection)
         {
             try
             {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                employee.IdentityUserId = userId;
+                db.Employee.Add(employee);
+                db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -52,16 +62,19 @@ namespace TrashCollector.Controllers
         // GET: EmployeeController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var employeeEdit = db.Employee.Find(id);
+            return View(employeeEdit);
         }
 
         // POST: EmployeeController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Employee employee)//(int id, IFormCollection collection)
         {
             try
             {
+                db.Employee.Update(employee);
+                db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -73,16 +86,19 @@ namespace TrashCollector.Controllers
         // GET: EmployeeController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var employeeDelete = db.Employee.Find(id);
+            return View(employeeDelete);
         }
 
         // POST: EmployeeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Employee employee)
         {
             try
             {
+                db.Employee.Remove(employee);
+                db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrashCollector.Data;
+using TrashCollector.Models;
 
 namespace TrashCollector.Controllers
 {
@@ -20,18 +22,21 @@ namespace TrashCollector.Controllers
         // GET: CustomerController
         public ActionResult Index()
         {
-            var customerList = db.Customer;
-            if (customerList == null)
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customer = db.Customer.Where(c => c.IdentityUserId ==
+            userId).SingleOrDefault();
+            if (customer == null)
             {
                 return RedirectToAction("Create");
             }
-            return View(customerList);
+            return View(customer);
         }
 
         // GET: CustomerController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var customerDetails = db.Customer.Find(id);
+            return View(customerDetails);
         }
 
         // GET: CustomerController/Create
@@ -43,10 +48,14 @@ namespace TrashCollector.Controllers
         // POST: CustomerController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Customer customer)//IformCollection collection
         {
             try
             {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                customer.IdentityUserId = userId;
+                db.Customer.Add(customer);
+                db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -58,17 +67,19 @@ namespace TrashCollector.Controllers
         // GET: CustomerController/Edit/5
         public ActionResult Edit(int id)
         {
-            
-            return View();
+            var customerEdit = db.Customer.Find(id);
+            return View(customerEdit);
         }
 
         // POST: CustomerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Customer customer)//(int id, IformCollection collection)
         {
             try
             {
+                db.Customer.Update(customer);
+                db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -80,16 +91,19 @@ namespace TrashCollector.Controllers
         // GET: CustomerController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var customerDelete = db.Customer.Find(id);
+            return View(customerDelete);
         }
 
         // POST: CustomerController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Customer customer)
         {
             try
             {
+                db.Customer.Remove(customer);
+                db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
