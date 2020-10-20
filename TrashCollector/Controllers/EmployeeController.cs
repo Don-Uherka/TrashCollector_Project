@@ -18,7 +18,7 @@ namespace TrashCollector.Controllers
         // GET: EmployeeController
         public ActionResult Index()
         {
-            var EmployeeList = db.
+            
             return View();
         }
 
