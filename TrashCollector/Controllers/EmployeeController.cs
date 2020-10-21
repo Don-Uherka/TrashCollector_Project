@@ -23,6 +23,7 @@ namespace TrashCollector.Controllers
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var employee = db.Employee.Where(c => c.IdentityUserId ==
             userId).SingleOrDefault();
+            var customerList = db.Customer.Where(m => m.ZipCode == employee.ZipCode);
             return View(employee);
         }
             
@@ -105,6 +106,11 @@ namespace TrashCollector.Controllers
             {
                 return View();
             }
+        }
+        public void ConfirmPickUp(Customer customer)
+        {
+            string confirm;
+            var pickUp = db.Customer.Where(m => m.Address == confirm);
         }
     }
 }
