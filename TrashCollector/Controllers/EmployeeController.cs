@@ -107,10 +107,13 @@ namespace TrashCollector.Controllers
                 return View();
             }
         }
-        public void ConfirmPickUp(Customer customer)
+        public ActionResult ConfirmPickUp(int id)
         {
-            string confirm;
-            var pickUp = db.Customer.Where(m => m.Address == confirm);
+            var customer = db.Customer.Where(c => c.Id == id).FirstOrDefault();
+            customer.ConfirmPickUp = true;
+            customer.Balance += 10;
+            db.SaveChanges();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

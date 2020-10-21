@@ -20,6 +20,7 @@ namespace TrashCollector.Models
         public string PickUp { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
+        public bool ConfirmPickUp { get; set; }
 
         [ForeignKey("IdentityUser")]
         public string IdentityUserId { get; set; }
