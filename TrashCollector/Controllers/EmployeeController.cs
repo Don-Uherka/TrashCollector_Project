@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrashCollector.Data;
@@ -10,6 +11,7 @@ using TrashCollector.Models;
 
 namespace TrashCollector.Controllers
 {
+    [Authorize(Roles = "Employee")]
     public class EmployeeController : Controller
     {
         private ApplicationDbContext db;
@@ -23,8 +25,14 @@ namespace TrashCollector.Controllers
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var employee = db.Employee.Where(c => c.IdentityUserId ==
             userId).SingleOrDefault();
+            if (employee == null)
+            {
+                return RedirectToAction("Create");
+            }
+            ConfirmPickUp(employee.Id);
+            //check if employee is null.  if so, route to create.
             var customerList = db.Customer.Where(m => m.ZipCode == employee.ZipCode);
-            return View(employee);
+            return View(customerList);
         }
             
 

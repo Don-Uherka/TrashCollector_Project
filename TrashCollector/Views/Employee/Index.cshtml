@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "_Layout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Index</h1>
@@ -26,6 +26,9 @@
                 @Html.DisplayNameFor(model => model.Address)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Balance)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.PickUp)
             </th>
             <th>
@@ -37,11 +40,14 @@
             <th>
                 @Html.DisplayNameFor(model => model.ConfirmPickUp)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdentityUser)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) { 
+@foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.FirstName)
@@ -71,10 +77,12 @@
                 @Html.DisplayFor(modelItem => item.ConfirmPickUp)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.IdentityUser.Id)
+            </td>
+            <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                <a asp-action="ConfirmPickUp" asp-route-id="@item.Id">Edit</a>
             </td>
         </tr>
 }
