@@ -39,8 +39,8 @@ namespace TrashCollector.Controllers
         // GET: EmployeeController/Details/5
         public ActionResult Details(int id)
         {
-            var employeeDetail = db.Employee.Find(id);
-            return View(employeeDetail);
+            var customerDetail = db.Customer.Find(id);
+            return View(customerDetail);
         }
 
         // GET: EmployeeController/Create
